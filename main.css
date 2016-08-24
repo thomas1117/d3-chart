@@ -1,3 +1,7 @@
+#container {
+	width: 1000px;
+	margin:auto;
+}
 .axis path {
     fill: none;
     stroke: #777;
@@ -11,3 +15,4 @@
 .domain {
 	height:1px;
 }
+
