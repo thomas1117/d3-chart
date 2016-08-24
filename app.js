@@ -1,34 +1,59 @@
+//MMM converts to three letter abbrev
 var moment = require('moment');
 
 var data = [{
-    "sale": "202",
-    "year": "2000"
+    "value": "202",
+    "time": " 1469391615"
 }, {
-    "sale": "215",
-    "year": "2001"
+    "value": "215",
+    "time": "1466799615"
 }, {
-    "sale": "179",
-    "year": "2002"
+    "value": "179",
+    "time": "1464121215"
 }, {
-    "sale": "199",
-    "year": "2003"
-}, {
-    "sale": "134",
-    "year": "2003"
-}, {
-    "sale": "176",
-    "year": "2010"
+    "value": "199",
+    "time": "1472070015"
 }];
 
-var month = convertToMonth('1460123691');
+var months = ['Jan','Feb','Mar','Apr','May','Jun','July','Aug'];
+
+
+
 
 function convertToMonth(epoch) {
 	return moment(epoch * 1000).utc().format('M');
 }
 
+function getRange(arr) {
+	var lowest = Number.POSITIVE_INFINITY;
+	var highest = Number.NEGATIVE_INFINITY;
+	
+	var tmp;
+
+	for (var i= arr.length-1; i>=0; i--) {
+	    
+	    tmp = arr[i].time;
+		
+		if (tmp < lowest) lowest = tmp;
+
+	    if (tmp > highest) highest = tmp;
+	}
+
+	return {
+		min:lowest,
+		max:highest
+	}
+}
+
+var min = getRange(data).min;
+var max = getRange(data).max;
+
+var startMonth = convertToMonth(min);
+var endMonth = convertToMonth(max);
+
+console.log(startMonth,endMonth)
 
 
-console.log(month)
 
 var vis = d3.select("#visualization");
 var WIDTH = 1000;
@@ -46,10 +71,10 @@ var yScale = d3.scale.linear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).dom
 
 var lineGen = d3.svg.line()
   .x(function(d) {
-    return xScale(d.year);
+    return xScale(d.time);
   })
   .y(function(d) {
-    return yScale(d.sale);
+    return yScale(d.value);
   })
 
 
