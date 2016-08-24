@@ -1,3 +1,4 @@
+var moment = require('moment');
 
 var data = [{
     "sale": "202",
@@ -18,6 +19,16 @@ var data = [{
     "sale": "176",
     "year": "2010"
 }];
+
+var month = convertToMonth('1460123691');
+
+function convertToMonth(epoch) {
+	return moment(epoch * 1000).utc().format('M');
+}
+
+
+
+console.log(month)
 
 var vis = d3.select("#visualization");
 var WIDTH = 1000;
