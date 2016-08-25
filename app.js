@@ -1,94 +1,39 @@
 //MMM converts to three letter abbrev
-
 //has to be ordered by time due to line draw...
 
 var moment = require('moment');
 
-var data = [
-{
-    "value": "109",
-    "time": "1454121215"
-},
+var dataset1 = require('./data/db.js').dataset1;
+var dataset2 = require('./data/db.js').dataset2;
 
-{
-    "value": "209",
-    "time": "1462070015"
-},
-{
-    "value": "229",
-    "time": "1462000015"
-},
-{
-    "value": "199",
-    "time": "1472070015"
-},
+var convertTime = require('./utils/utils.js').convertTime;
+var convertDate = require('./utils/utils.js').convertDate;
+var getRange = require('./utils/utils.js').getRange;
 
-];
+var rangeObj1 = getRange(dataset1);
 
+var minTime = rangeObj1.minTime;
+var maxTime = rangeObj1.maxTime;
 
-function convertTime(epoch) {
-	var date = +epoch * 1000;
-
-	var dateObj = new Date(date);
-
-	return dateObj;
-}
-
-function convertDate(date) {
-
-	return moment(date).format('DD-MMM-YY')
-}
-
-function getRange(arr) {
-	var lowTime = Number.POSITIVE_INFINITY;
-	var highTime = Number.NEGATIVE_INFINITY;
-
-	var lowVal = Number.POSITIVE_INFINITY;
-	var highVal = Number.NEGATIVE_INFINITY;
-	
-	var tmpTime;
-	var tmpVal;
-
-	for (var i= arr.length-1; i>=0; i--) {
-	    
-	    tmpTime = arr[i].time;
-		tmpVal = arr[i].value;
-
-		if (tmpTime < lowTime) lowTime = tmpTime
-
-	    if (tmpTime > highTime) highTime = tmpTime
-
-	    if (tmpVal < lowVal) lowVal = tmpVal
-
-	    if (tmpVal > highVal) highVal = tmpVal
-	}
-
-	return {
-		minTime:lowTime,
-		maxTime:highTime,
-		minVal:lowVal,
-		maxVal:highVal
-	}
-}
-
-var rangeObj = getRange(data);
-
-var minTime = rangeObj.minTime;
-var maxTime = rangeObj.maxTime;
-
-var minVal = +rangeObj.minVal;
-var maxVal = +rangeObj.maxVal;
+var minVal = +rangeObj1.minVal;
+var maxVal = +rangeObj1.maxVal;
 
 var minDate = convertTime(minTime);
 var maxDate = convertTime(maxTime);
 
+var rangeObj2 = getRange(dataset2);
 
+var minTime2 = rangeObj2.minTime;
+var maxTime2 = rangeObj2.maxTime;
 
+var minVal2 = +rangeObj2.minVal;
+var maxVal2 = +rangeObj2.maxVal;
 
-// var range = endMonth - startMonth + 2;
-
+var minDate2 = convertTime(minTime2);
+var maxDate2 = convertTime(maxTime2);
 
 var vis = d3.select("#visualization");
+
 var WIDTH = 1000;
 var HEIGHT = 500;
 var PAD = 20;
@@ -99,50 +44,101 @@ var MARGINS = {
         left: 50
     };
 
-var formatDate = d3.time.format("%d-%b-%y");
-
 var xScale = d3.time.scale().domain([minDate,maxDate]).range([MARGINS.left, WIDTH - MARGINS.right]);
 
+var yScale = d3.scale.linear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).domain([0,100]);
 
-// var xScale = d3.scale.linear().range([MARGINS.left, WIDTH - MARGINS.right]).domain([startMonth-1,endMonth + 1]);
+var lineGen1 = line1Create();
 
-var yScale = d3.scale.linear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).domain([minVal-10,maxVal + 100]);
-
-var lineGen = d3.svg.line()
-  .x(function(d) {
-  	
-    return xScale(convertTime(d.time));
-  })
-  .y(function(d) {
-    return yScale(d.value);
-  })
-
-
+var lineGen2 = line2Create();
 
 var xAxis = d3.svg.axis()
     .scale(xScale)
-    .ticks(3);
-    
 
+    
 var yAxis = d3.svg.axis()
     .scale(yScale)
-    .ticks(15)
+    .ticks(1)
     .orient("right");
 
-vis.append("svg:g")
-	.attr("class","axis")
-    .attr("transform", "translate(0," + (HEIGHT - MARGINS.bottom) + ")")
-    .call(xAxis);
+var parseDate = d3.time.format("%Y-%m-%d").parse;
+
+xAxisGenerate();
+yAxisGenerate();
+
+line1Append();
+line2Append();
+
+function xAxisGenerate() {
+    vis.append("svg:g")
+    .attr("class","axis")
+      .attr("transform", "translate(0," + (HEIGHT - MARGINS.bottom) + ")")
+      .call(xAxis);
+  }
+  
+
+function yAxisGenerate() {
+  vis.append("svg:g")
+    .attr("class","axis")
+      .attr("transform", "translate(" + (WIDTH-MARGINS.right) + ",0)")
+      .call(yAxis);
+}
+
+function line1Append() {
+  vis.append('svg:path')
+    .attr('id','line-1')
+    .attr('d', lineGen1(dataset1))
+    .attr('stroke', 'green')
+    .attr('stroke-width', 2)
+    .attr('fill', 'none');
+}
 
 
-vis.append("svg:g")
-	.attr("class","axis")
-    .attr("transform", "translate(" + (WIDTH-MARGINS.right) + ",0)")
-    .call(yAxis);
+
+function line2Append() {
+  vis.append('svg:path')
+    .attr('d', lineGen2(dataset2))
+    .attr('stroke', 'blue')
+    .attr('stroke-width', 2)
+    .attr('fill', 'none');
+}
 
 
-vis.append('svg:path')
-  .attr('d', lineGen(data))
-  .attr('stroke', 'green')
-  .attr('stroke-width', 2)
-  .attr('fill', 'none');
+
+function line1Create() {
+  return d3.svg.line()
+    .x(function(d) {
+     
+      return xScale(convertTime(d.time));
+    })
+    .y(function(d) {
+      
+      return yScale((+d.value/maxVal) * 100);
+    })
+
+}
+
+function line2Create() {
+  return d3.svg.line()
+    .x(function(d) {
+     
+      return xScale(convertTime(d.time));
+    })
+    .y(function(d) {
+     
+      return yScale((+d.value/maxVal2) * 100);
+    })
+}
+
+vis.selectAll('#line-1')
+  .data(dataset1)
+  .enter().append('circle')
+  .attr('cx', function(d) {
+    console.log('here it is at line 1 circle x ',xScale(convertTime(d.time)))
+    return xScale(convertTime(d.time));
+  })
+  .attr('cy', function(d) {
+    console.log('here it is at line 1 circle y ',xScale(convertTime(d.time)))
+    return yScale((+d.value/maxVal) * 100);
+  })
+  .attr('r', 6);
