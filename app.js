@@ -1,11 +1,15 @@
 //MMM converts to three letter abbrev
+
+//has to be ordered by time due to line draw...
+
 var moment = require('moment');
 
 var data = [
 {
-    "value": "179",
+    "value": "109",
     "time": "1454121215"
 },
+
 {
     "value": "209",
     "time": "1462070015"
@@ -14,11 +18,10 @@ var data = [
     "value": "229",
     "time": "1462000015"
 },
- {
+{
     "value": "199",
     "time": "1472070015"
-}
-
+},
 
 ];
 
