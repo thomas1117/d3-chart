@@ -1,58 +1,88 @@
 //MMM converts to three letter abbrev
 var moment = require('moment');
 
-var data = [{
-    "value": "202",
-    "time": " 1469391615"
-}, {
-    "value": "215",
-    "time": "1466799615"
-}, {
+var data = [
+{
     "value": "179",
-    "time": "1464121215"
-}, {
+    "time": "1454121215"
+},
+{
+    "value": "209",
+    "time": "1462070015"
+},
+{
+    "value": "229",
+    "time": "1462000015"
+},
+ {
     "value": "199",
     "time": "1472070015"
-}];
-
-var months = ['Jan','Feb','Mar','Apr','May','Jun','July','Aug'];
+}
 
 
+];
 
 
-function convertToMonth(epoch) {
-	return moment(epoch * 1000).utc().format('M');
+function convertTime(epoch) {
+	var date = +epoch * 1000;
+
+	var dateObj = new Date(date);
+
+	return dateObj;
+}
+
+function convertDate(date) {
+
+	return moment(date).format('DD-MMM-YY')
 }
 
 function getRange(arr) {
-	var lowest = Number.POSITIVE_INFINITY;
-	var highest = Number.NEGATIVE_INFINITY;
+	var lowTime = Number.POSITIVE_INFINITY;
+	var highTime = Number.NEGATIVE_INFINITY;
+
+	var lowVal = Number.POSITIVE_INFINITY;
+	var highVal = Number.NEGATIVE_INFINITY;
 	
-	var tmp;
+	var tmpTime;
+	var tmpVal;
 
 	for (var i= arr.length-1; i>=0; i--) {
 	    
-	    tmp = arr[i].time;
-		
-		if (tmp < lowest) lowest = tmp;
+	    tmpTime = arr[i].time;
+		tmpVal = arr[i].value;
 
-	    if (tmp > highest) highest = tmp;
+		if (tmpTime < lowTime) lowTime = tmpTime
+
+	    if (tmpTime > highTime) highTime = tmpTime
+
+	    if (tmpVal < lowVal) lowVal = tmpVal
+
+	    if (tmpVal > highVal) highVal = tmpVal
 	}
 
 	return {
-		min:lowest,
-		max:highest
+		minTime:lowTime,
+		maxTime:highTime,
+		minVal:lowVal,
+		maxVal:highVal
 	}
 }
 
-var min = getRange(data).min;
-var max = getRange(data).max;
+var rangeObj = getRange(data);
 
-var startMonth = convertToMonth(min);
-var endMonth = convertToMonth(max);
+var minTime = rangeObj.minTime;
+var maxTime = rangeObj.maxTime;
 
-console.log(startMonth,endMonth)
+var minVal = +rangeObj.minVal;
+var maxVal = +rangeObj.maxVal;
 
+var minDate = convertTime(minTime);
+var maxDate = convertTime(maxTime);
+
+
+
+
+// var range = endMonth - startMonth + 2;
 
 
 var vis = d3.select("#visualization");
@@ -66,12 +96,19 @@ var MARGINS = {
         left: 50
     };
 
-var xScale = d3.scale.linear().range([MARGINS.left, WIDTH - MARGINS.right]).domain([2000,2010]);
-var yScale = d3.scale.linear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).domain([134-PAD,215+PAD]);
+var formatDate = d3.time.format("%d-%b-%y");
+
+var xScale = d3.time.scale().domain([minDate,maxDate]).range([MARGINS.left, WIDTH - MARGINS.right]);
+
+
+// var xScale = d3.scale.linear().range([MARGINS.left, WIDTH - MARGINS.right]).domain([startMonth-1,endMonth + 1]);
+
+var yScale = d3.scale.linear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).domain([minVal-10,maxVal + 100]);
 
 var lineGen = d3.svg.line()
   .x(function(d) {
-    return xScale(d.time);
+  	
+    return xScale(convertTime(d.time));
   })
   .y(function(d) {
     return yScale(d.value);
@@ -80,10 +117,13 @@ var lineGen = d3.svg.line()
 
 
 var xAxis = d3.svg.axis()
-    .scale(xScale);
-  
+    .scale(xScale)
+    .ticks(3);
+    
+
 var yAxis = d3.svg.axis()
     .scale(yScale)
+    .ticks(15)
     .orient("right");
 
 vis.append("svg:g")
