@@ -69,6 +69,9 @@ yAxisGenerate();
 line1Append();
 line2Append();
 
+line1CircleAppend();
+line2CircleAppend();
+
 function xAxisGenerate() {
     vis.append("svg:g")
     .attr("class","axis")
@@ -97,6 +100,7 @@ function line1Append() {
 
 function line2Append() {
   vis.append('svg:path')
+    .attr('id','line-2')
     .attr('d', lineGen2(dataset2))
     .attr('stroke', 'blue')
     .attr('stroke-width', 2)
@@ -130,15 +134,34 @@ function line2Create() {
     })
 }
 
-vis.selectAll('#line-1')
-  .data(dataset1)
-  .enter().append('circle')
-  .attr('cx', function(d) {
-    console.log('here it is at line 1 circle x ',xScale(convertTime(d.time)))
-    return xScale(convertTime(d.time));
-  })
-  .attr('cy', function(d) {
-    console.log('here it is at line 1 circle y ',xScale(convertTime(d.time)))
-    return yScale((+d.value/maxVal) * 100);
-  })
-  .attr('r', 6);
+function line1CircleAppend() {
+  vis.selectAll('#line-1')
+    .data(dataset1)
+    .enter().append('circle')
+    .attr('cx', function(d) {
+      
+      return xScale(convertTime(d.time));
+    })
+    .attr('cy', function(d) {
+      
+      return yScale((+d.value/maxVal) * 100);
+    })
+    .attr('r', 6);
+}
+
+function line2CircleAppend() {
+  vis.selectAll('#line-2')
+    .data(dataset2)
+    .enter().append('circle')
+    .attr('cx', function(d) {
+      
+      return xScale(convertTime(d.time));
+    })
+    .attr('cy', function(d) {
+      
+      return yScale((+d.value/maxVal2) * 100);
+    })
+    .attr('r', 6);
+}
+
+
