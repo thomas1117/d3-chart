@@ -81,8 +81,21 @@ var dataset2 = [
 
 ];
 
+var campaignSet = [
+    {
+        "name": "Campaign One",
+        "key": "cmpgn_one",
+        "order": 1,
+        "dates": [
+            {"start": 1452121215, "end": 1464121215},
+        ]
+    }
+
+]
+
 
 module.exports = {
 	dataset1:dataset1,
-	dataset2:dataset2
+	dataset2:dataset2,
+	campaignSet:campaignSet
 }

@@ -1,10 +1,8 @@
-//MMM converts to three letter abbrev
-//has to be ordered by time due to line draw...
-
 var moment = require('moment');
 
 var dataset1 = require('./data/db.js').dataset1;
 var dataset2 = require('./data/db.js').dataset2;
+var campaignSet = require('./data/db.js').campaignSet;
 
 var convertTime = require('./utils/utils.js').convertTime;
 var convertDate = require('./utils/utils.js').convertDate;
@@ -48,9 +46,8 @@ var xScale = d3.time.scale().domain([minDate,maxDate]).range([MARGINS.left, WIDT
 
 var yScale = d3.scale.linear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).domain([0,100]);
 
-var lineGen1 = line1Create();
-
-var lineGen2 = line2Create();
+var lineGen1 = lineCreate(maxVal);
+var lineGen2 = lineCreate(maxVal2);
 
 var xAxis = d3.svg.axis()
     .scale(xScale)
@@ -66,11 +63,11 @@ var parseDate = d3.time.format("%Y-%m-%d").parse;
 xAxisGenerate();
 yAxisGenerate();
 
-line1Append();
-line2Append();
+lineAppend('line-1',lineGen1,dataset1,'green');
+lineAppend('line-2',lineGen2,dataset2,'blue');
 
-line1CircleAppend();
-line2CircleAppend();
+circleAppend('line-1',dataset1,maxVal);
+circleAppend('line-2',dataset2,maxVal2);
 
 function xAxisGenerate() {
     vis.append("svg:g")
@@ -87,81 +84,80 @@ function yAxisGenerate() {
       .call(yAxis);
 }
 
-function line1Append() {
+
+
+function lineAppend(id,func,dataSet,color) {
   vis.append('svg:path')
-    .attr('id','line-1')
-    .attr('d', lineGen1(dataset1))
-    .attr('stroke', 'green')
+    .attr('id',id)
+    .attr('d', func(dataSet))
+    .attr('stroke', color)
     .attr('stroke-width', 2)
     .attr('fill', 'none');
 }
 
 
-
-function line2Append() {
-  vis.append('svg:path')
-    .attr('id','line-2')
-    .attr('d', lineGen2(dataset2))
-    .attr('stroke', 'blue')
-    .attr('stroke-width', 2)
-    .attr('fill', 'none');
-}
-
-
-
-function line1Create() {
+function lineCreate(maxVal) {
   return d3.svg.line()
-    .x(function(d) {
-     
-      return xScale(convertTime(d.time));
-    })
-    .y(function(d) {
+    .x(function(d){
       
+      return xScale(convertTime(d.time))
+    })
+    .y(function(d){
       return yScale((+d.value/maxVal) * 100);
     })
+}
+
+function circleAppend(id,dataSet,maxed) {
+    vis.selectAll(id)
+      .data(dataSet)
+      .enter().append('circle')
+      .attr('cx', function(d) {
+        
+        return xScale(convertTime(d.time));
+      })
+      .attr('cy', function(d) {
+        
+        return yScale((+d.value/maxed) * 100);
+      })
+      .attr('r', 6);
+}
+
+
+
+
+function rectCreate(id,data,color) {
+  var totalDiff = +maxTime - minTime;
+
+  var rectDiff = data.end - data.start;
+
+  var width = (rectDiff / totalDiff) * WIDTH;
+
+  var start = new Date(data.start *1000);
+
+  var end = new Date(data.end *1000);
+
+
+
+
+  var fromBeg = (data.start - minTime);
+
+  vis.append('rect')
+  .attr("id",'rect-1')
+  .attr("x",fromBeg)
+  .attr("y",10)
+  .attr("width",width)
+  .attr("height",20)
+  .attr("fill",color)
 
 }
 
-function line2Create() {
-  return d3.svg.line()
-    .x(function(d) {
-     
-      return xScale(convertTime(d.time));
-    })
-    .y(function(d) {
-     
-      return yScale((+d.value/maxVal2) * 100);
-    })
-}
 
-function line1CircleAppend() {
-  vis.selectAll('#line-1')
-    .data(dataset1)
-    .enter().append('circle')
-    .attr('cx', function(d) {
-      
-      return xScale(convertTime(d.time));
-    })
-    .attr('cy', function(d) {
-      
-      return yScale((+d.value/maxVal) * 100);
-    })
-    .attr('r', 6);
-}
 
-function line2CircleAppend() {
-  vis.selectAll('#line-2')
-    .data(dataset2)
-    .enter().append('circle')
-    .attr('cx', function(d) {
-      
-      return xScale(convertTime(d.time));
-    })
-    .attr('cy', function(d) {
-      
-      return yScale((+d.value/maxVal2) * 100);
-    })
-    .attr('r', 6);
-}
+rectCreate('rect-1',campaignSet[0].dates[0],'blue');
+
+
+
+
+
 
 
