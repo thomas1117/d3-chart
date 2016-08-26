@@ -2,6 +2,12 @@
 	width: 1000px;
 	margin:auto;
 }
+
+text {
+	color:#fff;
+}
+
+
 .axis path {
     fill: none;
     stroke: #777;
@@ -9,10 +15,25 @@
 }
 .axis text {
     font-family: Lato;
-    font-size: 13px;
+    font-size: 15px;
+    color:#fff;
+}
+
+.axis {
+	color:#fff;
 }
 
 .domain {
 	height:1px;
 }
 
+.colorbox {
+	width:15px;
+	height: 15px;
+	display: inline-block;
+	margin-right:5px;
+}
+
+li {
+	list-style: none;
+}

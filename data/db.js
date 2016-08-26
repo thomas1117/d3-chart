@@ -88,18 +88,18 @@ var campaignSet = [
         "order": 1,
         "dates": [
             {"start": 1452121215, "end": 1454121215},
-            {"start": 1456221715, "end": 1456321215},
+            {"start": 1456221715, "end": 1456721215},
             
 
         ]
     },
     {
-        "name": "Campaign One",
-        "key": "cmpgn_one",
+        "name": "Campaign Two",
+        "key": "cmpgn_two",
         "order": 1,
         "dates": [
             {"start": 1452131215, "end": 1454131215},
-            {"start": 1456331715, "end": 1456431215},
+            {"start": 1466431715, "end": 1466731215},
             
 
         ]

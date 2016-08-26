@@ -16,8 +16,8 @@ var maxTime = rangeObj1.maxTime;
 var minVal = +rangeObj1.minVal;
 var maxVal = +rangeObj1.maxVal;
 
-var minDate = convertTime(minTime);
-var maxDate = convertTime(maxTime);
+// var minDate = convertTime(minTime);
+// var maxDate = convertTime(maxTime);
 
 var rangeObj2 = getRange(dataset2);
 
@@ -29,6 +29,27 @@ var maxVal2 = +rangeObj2.maxVal;
 
 var minDate2 = convertTime(minTime2);
 var maxDate2 = convertTime(maxTime2);
+
+
+var minDate = padTime(maxTime,minTime).minDate;
+var maxDate = padTime(maxTime,minTime).maxDate;
+
+function padTime(maxTime,minTime) {
+  var diffTime = maxTime - minTime;
+
+  var pad = diffTime * .10;
+
+  var minWithPad = minTime - pad;
+
+  var maxWithPad = maxTime + pad;
+
+  return {
+    minDate: convertTime(minWithPad),
+    maxDate: convertTime(maxWithPad)
+  }
+}
+
+
 
 var vis = d3.select("#visualization");
 
@@ -66,8 +87,8 @@ yAxisGenerate();
 lineAppend('line-1',lineGen1,dataset1,'green');
 lineAppend('line-2',lineGen2,dataset2,'blue');
 
-circleAppend('line-1',dataset1,maxVal);
-circleAppend('line-2',dataset2,maxVal2);
+circleAppend('line-1',dataset1,maxVal,'green');
+circleAppend('line-2',dataset2,maxVal2,'blue');
 
 function xAxisGenerate() {
     vis.append("svg:g")
@@ -107,7 +128,7 @@ function lineCreate(maxVal) {
     })
 }
 
-function circleAppend(id,dataSet,maxed) {
+function circleAppend(id,dataSet,maxed,color) {
     vis.selectAll(id)
       .data(dataSet)
       .enter().append('circle')
@@ -119,56 +140,87 @@ function circleAppend(id,dataSet,maxed) {
         
         return yScale((+d.value/maxed) * 100);
       })
-      .attr('r', 6);
+      .attr('r', 6)
+      .attr('fill',color)
 }
 
 
 
 
-function rectCreate(id,data,ypos,color) {
+// function rectCreate(id,data,ypos,color) {
 
 
-  var totalDiff = +maxTime - minTime;
+//   var totalDiff = maxTime - minTime;
 
-  var rectDiff = data.end - data.start;
+//   var rectDiff = data.end - data.start;
 
-  var width = (rectDiff / totalDiff) * WIDTH;
+//   var width = (rectDiff / totalDiff) * WIDTH;
 
-  var fromX = Number(data.start) - Number(minTime);
+//   var fromX = Number(data.start) - Number(minTime);
 
-  var percent = (fromX/totalDiff);
-
-
-
-  var x = percent * WIDTH;
+//   var percent = (fromX/totalDiff);
 
 
 
-  var date =  new Date(data.start * 1000);
+//   var x = percent * WIDTH;
+
+
+
+//   var date =  new Date(data.start * 1000);
   
+
+//   vis.append('rect')
+//   .attr("id",id)
+//   .attr("x",x + MARGINS.left)
+//   .attr("y",ypos)
+//   .attr("width",width)
+//   .attr("height",20)
+//   .attr("fill",color)
+
+// }
+
+function rectCreate(id,data,ypos,color) {
+  var x = xScale(convertTime(data.start));
+  var end = xScale(convertTime(data.end))
+
+  var width = end - x;
 
   vis.append('rect')
   .attr("id",id)
-  .attr("x",x + MARGINS.left)
+  .attr("x",x)
   .attr("y",ypos)
   .attr("width",width)
   .attr("height",20)
   .attr("fill",color)
 
 }
+var colors = ['blue','green']
 
 campaignSet.forEach(function(obj,i){
     var yPos = 40 + (40*i);
+    var color = colors[i];
+
+    appendToKey(obj,color)
 
     obj.dates.forEach(function(dates,i){
       
-      rectCreate('rect-' + i ,dates,yPos,'blue');
+      rectCreate('rect-' + i ,dates,yPos,color);
     })
 })
 
+function appendToKey(obj,color) {
+  var list = document.getElementById('key');
+  var li = document.createElement('li');
+
+  li.innerHTML = "<div class='colorbox' style=background-color:" + color + "></div>" + "<span>" + obj.name + "</span>";
 
 
-// rectCreate('rect-1',campaignSet[0].dates[0],'blue');
+  list.appendChild(li)
+}
+
+
+
+
 
 
 
