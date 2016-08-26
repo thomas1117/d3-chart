@@ -127,23 +127,26 @@ function circleAppend(id,dataSet,maxed) {
 
 function rectCreate(id,data,index,color) {
 
+
   var totalDiff = +maxTime - minTime;
 
   var rectDiff = data.end - data.start;
 
   var width = (rectDiff / totalDiff) * WIDTH;
 
-  var fromX = data.start - minTime;
+  var fromX = Number(data.start) - Number(minTime);
 
-  var percent = fromX / totalDiff * 100;
+  var percent = (fromX/totalDiff);
+
+console.log(fromX)
 
   var x = percent * WIDTH;
 
-  var date = new Date(data.start * 1000);
-  console.log(date)
- 
-  console.log(minTime,data.start)
-  
+
+
+  var date =  new Date(data.start * 1000);
+
+
   vis.append('rect')
   .attr("id",id)
   .attr("x",x + MARGINS.left)
