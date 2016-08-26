@@ -125,35 +125,44 @@ function circleAppend(id,dataSet,maxed) {
 
 
 
-function rectCreate(id,data,color) {
+function rectCreate(id,data,index,color) {
+
   var totalDiff = +maxTime - minTime;
 
   var rectDiff = data.end - data.start;
 
   var width = (rectDiff / totalDiff) * WIDTH;
 
-  var start = new Date(data.start *1000);
+  var fromX = data.start - minTime;
 
-  var end = new Date(data.end *1000);
+  var percent = fromX / totalDiff * 100;
 
+  var x = percent * WIDTH;
 
-
-
-  var fromBeg = (data.start - minTime);
-
+  var date = new Date(data.start * 1000);
+  console.log(date)
+ 
+  console.log(minTime,data.start)
+  
   vis.append('rect')
-  .attr("id",'rect-1')
-  .attr("x",fromBeg)
-  .attr("y",10)
+  .attr("id",id)
+  .attr("x",x + MARGINS.left)
+  .attr("y",40)
   .attr("width",width)
   .attr("height",20)
   .attr("fill",color)
 
 }
 
+campaignSet.forEach(function(obj){
+    obj.dates.forEach(function(dates,i){
+      rectCreate('rect-' + i ,dates,i,'blue');
+    })
+})
 
 
-rectCreate('rect-1',campaignSet[0].dates[0],'blue');
+
+// rectCreate('rect-1',campaignSet[0].dates[0],'blue');
 
 
 
