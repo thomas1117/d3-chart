@@ -52,6 +52,7 @@ function padTime(maxTime,minTime) {
 
 
 var vis = d3.select("#visualization");
+var boxes = d3.select("#boxes");
 
 var WIDTH = 1000;
 var HEIGHT = 500;
@@ -60,7 +61,7 @@ var MARGINS = {
         top: 30,
         right: 40,
         bottom: 30,
-        left: 50
+        left: 0
     };
 
 var xScale = d3.time.scale().domain([minDate,maxDate]).range([MARGINS.left, WIDTH - MARGINS.right]);
@@ -72,9 +73,12 @@ var lineGen2 = lineCreate(maxVal2);
 
 var xAxis = d3.svg.axis()
     .scale(xScale)
+    .tickFormat(d3.time.format("%b"))
+    .outerTickSize(0)
 
     
 var yAxis = d3.svg.axis()
+    .outerTickSize(0)
     .scale(yScale)
     .ticks(1)
     .orient("right");
@@ -84,11 +88,11 @@ var parseDate = d3.time.format("%Y-%m-%d").parse;
 xAxisGenerate();
 yAxisGenerate();
 
-lineAppend('line-1',lineGen1,dataset1,'green');
-lineAppend('line-2',lineGen2,dataset2,'blue');
+lineAppend('line-1',lineGen1,dataset1,'#3C8D2F');
+lineAppend('line-2',lineGen2,dataset2,'#AA3939');
 
-circleAppend('line-1',dataset1,maxVal,'green');
-circleAppend('line-2',dataset2,maxVal2,'blue');
+circleAppend('line-1',dataset1,maxVal,'#3C8D2F');
+circleAppend('line-2',dataset2,maxVal2,'#AA3939');
 
 function xAxisGenerate() {
     vis.append("svg:g")
@@ -100,6 +104,7 @@ function xAxisGenerate() {
 
 function yAxisGenerate() {
   vis.append("svg:g")
+    .attr("id",'y-axis')
     .attr("class","axis")
       .attr("transform", "translate(" + (WIDTH-MARGINS.right) + ",0)")
       .call(yAxis);
@@ -112,7 +117,7 @@ function lineAppend(id,func,dataSet,color) {
     .attr('id',id)
     .attr('d', func(dataSet))
     .attr('stroke', color)
-    .attr('stroke-width', 2)
+    .attr('stroke-width', 4)
     .attr('fill', 'none');
 }
 
@@ -145,66 +150,32 @@ function circleAppend(id,dataSet,maxed,color) {
 }
 
 
-
-
-// function rectCreate(id,data,ypos,color) {
-
-
-//   var totalDiff = maxTime - minTime;
-
-//   var rectDiff = data.end - data.start;
-
-//   var width = (rectDiff / totalDiff) * WIDTH;
-
-//   var fromX = Number(data.start) - Number(minTime);
-
-//   var percent = (fromX/totalDiff);
-
-
-
-//   var x = percent * WIDTH;
-
-
-
-//   var date =  new Date(data.start * 1000);
-  
-
-//   vis.append('rect')
-//   .attr("id",id)
-//   .attr("x",x + MARGINS.left)
-//   .attr("y",ypos)
-//   .attr("width",width)
-//   .attr("height",20)
-//   .attr("fill",color)
-
-// }
-
 function rectCreate(id,data,ypos,color) {
   var x = xScale(convertTime(data.start));
   var end = xScale(convertTime(data.end))
 
   var width = end - x;
 
-  vis.append('rect')
+  boxes.append('rect')
   .attr("id",id)
   .attr("x",x)
   .attr("y",ypos)
   .attr("width",width)
-  .attr("height",20)
+  .attr("height",40)
   .attr("fill",color)
 
 }
 var colors = ['blue','green']
 
-campaignSet.forEach(function(obj,i){
-    var yPos = 40 + (40*i);
-    var color = colors[i];
+campaignSet.forEach(function(obj,index){
+    var yPos = 40 + (50*index);
+    var color = colors[index];
 
     appendToKey(obj,color)
 
     obj.dates.forEach(function(dates,i){
       
-      rectCreate('rect-' + i ,dates,yPos,color);
+      rectCreate('rect-' + (i+ "" + index) ,dates,yPos,color);
     })
 })
 
@@ -218,13 +189,9 @@ function appendToKey(obj,color) {
   list.appendChild(li)
 }
 
-
-
-
-
-
-
-
-
-
-
+// vis.append('rect')
+// .attr("id","background")
+// .attx("x",0)
+// .attr("y",0)
+// .style("width",1000)
+// .style("height",1000)

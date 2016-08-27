@@ -1,22 +1,38 @@
 #container {
 	width: 1000px;
 	margin:auto;
+	background: #2E4172;
 }
 
 text {
 	color:#fff;
 }
 
+#visualization {
+	position: relative;
+	
+}
 
-.axis path {
+#y-axis line {
+	display: none;
+}
+#boxes {
+	width: 100%;
+}
+
+
+.axis {
     fill: none;
-    stroke: #777;
+    stroke: #fff;
     shape-rendering: crispEdges;
 }
 .axis text {
-    font-family: Lato;
+ 
     font-size: 15px;
-    color:#fff;
+    font-family: helvetica;
+    color: #000;
+    fill: #fff;
+    stroke: #fff;
 }
 
 .axis {
