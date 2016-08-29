@@ -178,11 +178,11 @@ function circleAppend(id,dataSet,maxed,color) {
         .duration(200)    
         .style("opacity", .9);
         div.html(
-          "<span>Value " + d.value + "</span>" + "<br/>" +
-          "<span>Time " + moment(convertTime(d.time)).format('M/DD/YY') + "</span>"
+          "<span>Value: " + d.value + "</span>" + "<br/>" +
+          "<span>Time: " + moment(convertTime(d.time)).format('M/DD/YY') + "</span>"
           )
         .style("left", (d3.event.pageX) + "px")   
-        .style("top", (d3.event.pageY - 28) + "px");  
+        .style("top", (d3.event.pageY - 45) + "px");  
       })
 }
 
@@ -206,7 +206,9 @@ function rectCreate(id,data,ypos,color,masterData) {
     .duration(200)    
     .style("opacity", .9)
     div.html(
-      "<h2>Campaign Name:" + masterData.name + "</h2>"
+      "<h2>Campaign Name:" + masterData.name + "</h2>" + 
+      "<h4>Start Time: " + moment(convertTime(data.start)).format("MM/DD/YY") + "</h4>" +
+      "<h4>End Time: " + moment(convertTime(data.end)).format("MM/DD/YY") + "</h4>"
     )
     .style("left", (d3.event.pageX) + "px")   
     .style("top", (d3.event.pageY - 28) + "px");  
