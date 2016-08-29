@@ -1,7 +1,13 @@
+
 #container {
 	width: 1000px;
 	margin:auto;
+	
+}
+
+#background {
 	background: #2E4172;
+	position: relative;
 }
 
 text {
@@ -13,9 +19,7 @@ text {
 	
 }
 
-#y-axis line {
-	display: none;
-}
+
 #boxes {
 	width: 100%;
 }
@@ -23,7 +27,7 @@ text {
 
 .axis {
     fill: none;
-    stroke: #fff;
+    stroke: #000;
     shape-rendering: crispEdges;
 }
 .axis text {
@@ -31,16 +35,13 @@ text {
     font-size: 15px;
     font-family: helvetica;
     color: #000;
-    fill: #fff;
-    stroke: #fff;
+    fill: #000;
+    stroke: #000;
 }
 
-.axis {
-	color:#fff;
-}
 
 .domain {
-	height:1px;
+	stroke-width:3px;
 }
 
 .colorbox {
@@ -53,3 +54,9 @@ text {
 li {
 	list-style: none;
 }
+
+.tick line {
+	opacity: .2;
+}
+
+

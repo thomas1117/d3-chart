@@ -54,6 +54,8 @@ function padTime(maxTime,minTime) {
 var vis = d3.select("#visualization");
 var boxes = d3.select("#boxes");
 
+
+
 var WIDTH = 1000;
 var HEIGHT = 500;
 var PAD = 20;
@@ -62,7 +64,16 @@ var MARGINS = {
         right: 40,
         bottom: 30,
         left: 0
-    };
+};
+
+vis.append('svg:rect')
+.attr("id","background")
+.attr("x",0)
+.attr("y",MARGINS.top)
+.attr('fill','#2E4172')
+.style("width",WIDTH - MARGINS.right)
+.style("height",HEIGHT - MARGINS.bottom - MARGINS.bottom)
+
 
 var xScale = d3.time.scale().domain([minDate,maxDate]).range([MARGINS.left, WIDTH - MARGINS.right]);
 
@@ -80,7 +91,8 @@ var xAxis = d3.svg.axis()
 var yAxis = d3.svg.axis()
     .outerTickSize(0)
     .scale(yScale)
-    .ticks(1)
+    .ticks(5)
+    .innerTickSize((-WIDTH + MARGINS.right))
     .orient("right");
 
 var parseDate = d3.time.format("%Y-%m-%d").parse;
@@ -129,7 +141,7 @@ function lineCreate(maxVal) {
       return xScale(convertTime(d.time))
     })
     .y(function(d){
-      return yScale((+d.value/maxVal) * 100);
+      return yScale((+d.value/maxVal) * 96);
     })
 }
 
@@ -143,7 +155,7 @@ function circleAppend(id,dataSet,maxed,color) {
       })
       .attr('cy', function(d) {
         
-        return yScale((+d.value/maxed) * 100);
+        return yScale((+d.value/maxed) * 96);
       })
       .attr('r', 6)
       .attr('fill',color)
@@ -189,9 +201,6 @@ function appendToKey(obj,color) {
   list.appendChild(li)
 }
 
-// vis.append('rect')
-// .attr("id","background")
-// .attx("x",0)
-// .attr("y",0)
-// .style("width",1000)
-// .style("height",1000)
+
+        
+
