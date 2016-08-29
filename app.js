@@ -57,7 +57,7 @@ var boxes = d3.select("#boxes");
 
 
 var WIDTH = 1000;
-var HEIGHT = 500;
+var HEIGHT = 450;
 var PAD = 20;
 var MARGINS = {
         top: 30,
@@ -70,7 +70,6 @@ vis.append('svg:rect')
 .attr("id","background")
 .attr("x",0)
 .attr("y",MARGINS.top)
-.attr('fill','#2E4172')
 .style("width",WIDTH - MARGINS.right)
 .style("height",HEIGHT - MARGINS.bottom - MARGINS.bottom)
 
@@ -85,6 +84,7 @@ var lineGen2 = lineCreate(maxVal2);
 var xAxis = d3.svg.axis()
     .scale(xScale)
     .tickFormat(d3.time.format("%b"))
+    // .innerTickSize(-HEIGHT)
     .outerTickSize(0)
 
     
@@ -108,6 +108,7 @@ circleAppend('line-2',dataset2,maxVal2,'#AA3939');
 
 function xAxisGenerate() {
     vis.append("svg:g")
+    .attr("id",'x-axis')
     .attr("class","axis")
       .attr("transform", "translate(0," + (HEIGHT - MARGINS.bottom) + ")")
       .call(xAxis);
@@ -129,7 +130,6 @@ function lineAppend(id,func,dataSet,color) {
     .attr('id',id)
     .attr('d', func(dataSet))
     .attr('stroke', color)
-    .attr('stroke-width', 4)
     .attr('fill', 'none');
 }
 
@@ -157,7 +157,6 @@ function circleAppend(id,dataSet,maxed,color) {
         
         return yScale((+d.value/maxed) * 96);
       })
-      .attr('r', 6)
       .attr('fill',color)
 }
 
@@ -173,14 +172,14 @@ function rectCreate(id,data,ypos,color) {
   .attr("x",x)
   .attr("y",ypos)
   .attr("width",width)
-  .attr("height",40)
+  .attr("height",20)
   .attr("fill",color)
 
 }
-var colors = ['blue','green']
+var colors = ['#214586','green']
 
 campaignSet.forEach(function(obj,index){
-    var yPos = 40 + (50*index);
+    var yPos = 20 + (40*index);
     var color = colors[index];
 
     appendToKey(obj,color)

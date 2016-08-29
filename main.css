@@ -1,18 +1,30 @@
 
 #container {
-	width: 1000px;
+	width: 960px;
+	padding:25px 60px 20px 60px;
 	margin:auto;
+	background:#272B2B;
+	position: relative;
 	
 }
 
+
+
 #background {
-	background: #2E4172;
+	fill:#272B2B;
 	position: relative;
+	margin:auto;
 }
 
-text {
-	color:#fff;
+.data-header {
+	
+	color:#ffffff;
+	padding-top: 20px;
+	font-weight: 200;
+	font-family: helvetica;
+
 }
+
 
 #visualization {
 	position: relative;
@@ -20,43 +32,79 @@ text {
 }
 
 
+
+circle {
+	r:5;
+}
+
+
 #boxes {
 	width: 100%;
+	height:100px;
+}
+
+#y-axis text {
+	display: none;
+}
+
+/*#y-axis g:first-child {
+	display: none;
+}*/
+
+.tick {
+	stroke: #646C6E;
+	stroke-width: 1px;
 }
 
 
-.axis {
-    fill: none;
-    stroke: #000;
-    shape-rendering: crispEdges;
+
+#x-axis .domain {
+	display: none;
 }
+#y-axis .domain {
+	display: none;
+}
+
+ul {
+	padding:0;
+	margin:0;
+}
+
+
 .axis text {
  
     font-size: 15px;
     font-family: helvetica;
-    color: #000;
-    fill: #000;
-    stroke: #000;
+    stroke: #ffffff;
+    font-weight: 100;
 }
 
 
 .domain {
-	stroke-width:3px;
+	stroke-width:1px;
 }
 
 .colorbox {
-	width:15px;
-	height: 15px;
+	width:20px;
+	height: 20px;
 	display: inline-block;
 	margin-right:5px;
+	position: relative;
+	top:4px;
 }
 
 li {
 	list-style: none;
+	padding-bottom: 20px;
 }
 
-.tick line {
-	opacity: .2;
+#key {
+
+	color:#ffffff;
+	font-family: helvetica;
+	font-weight: thin;
 }
+
+
 
 
