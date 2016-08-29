@@ -173,10 +173,14 @@ function circleAppend(id,dataSet,maxed,color) {
       })
       .attr('fill',color)
       .on("mouseover",function(d){
+
         div.transition()    
         .duration(200)    
         .style("opacity", .9);
-        div.html(d.value)
+        div.html(
+          "<span>Value " + d.value + "</span>" + "<br/>" +
+          "<span>Time " + moment(convertTime(d.time)).format('M/DD/YY') + "</span>"
+          )
         .style("left", (d3.event.pageX) + "px")   
         .style("top", (d3.event.pageY - 28) + "px");  
       })
@@ -197,28 +201,31 @@ function rectCreate(id,data,ypos,color,masterData) {
   .attr("height",20)
   .attr("fill",color)
   .on("mouseover",function(d){
-        
-        div.transition()    
-        .duration(200)    
-        .style("opacity", .9);
-        div.html(masterData.name)
-        .style("left", (d3.event.pageX) + "px")   
-        .style("top", (d3.event.pageY - 28) + "px");  
-      })
+    
+    div.transition()    
+    .duration(200)    
+    .style("opacity", .9)
+    div.html(
+      "<h2>Campaign Name:" + masterData.name + "</h2>"
+    )
+    .style("left", (d3.event.pageX) + "px")   
+    .style("top", (d3.event.pageY - 28) + "px");  
+  })
 
 
 }
+
 var colors = ['#214586','green']
 
-campaignSet.forEach(function(obj,index){
+campaignSet.forEach(function(masterObj,index){
     var yPos = 20 + (40*index);
     var color = colors[index];
 
-    appendToKey(obj,color)
+    appendToKey(masterObj,color)
 
-    obj.dates.forEach(function(dates,i){
+    masterObj.dates.forEach(function(dates,i){
       
-      rectCreate('rect-' + (i+ "" + index) ,dates,yPos,color,obj);
+      rectCreate('rect-' + (i+ "" + index) ,dates,yPos,color,masterObj);
     })
 })
 
