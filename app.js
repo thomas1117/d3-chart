@@ -50,9 +50,22 @@ function padTime(maxTime,minTime) {
 }
 
 
+ 
+/* Invoke the tip in the context of your visualization */
+
+
 
 var vis = d3.select("#visualization");
+
+
 var boxes = d3.select("#boxes");
+
+
+//for tool tips
+
+var div = d3.select("body").append("div") 
+    .attr("class", "tooltip")       
+    .style("opacity", 0);
 
 
 
@@ -146,6 +159,7 @@ function lineCreate(maxVal) {
 }
 
 function circleAppend(id,dataSet,maxed,color) {
+    var that = vis;
     vis.selectAll(id)
       .data(dataSet)
       .enter().append('circle')
@@ -158,10 +172,18 @@ function circleAppend(id,dataSet,maxed,color) {
         return yScale((+d.value/maxed) * 96);
       })
       .attr('fill',color)
+      .on("mouseover",function(d){
+        div.transition()    
+        .duration(200)    
+        .style("opacity", .9);
+        div.html(d.value)
+        .style("left", (d3.event.pageX) + "px")   
+        .style("top", (d3.event.pageY - 28) + "px");  
+      })
 }
 
 
-function rectCreate(id,data,ypos,color) {
+function rectCreate(id,data,ypos,color,masterData) {
   var x = xScale(convertTime(data.start));
   var end = xScale(convertTime(data.end))
 
@@ -174,6 +196,16 @@ function rectCreate(id,data,ypos,color) {
   .attr("width",width)
   .attr("height",20)
   .attr("fill",color)
+  .on("mouseover",function(d){
+        
+        div.transition()    
+        .duration(200)    
+        .style("opacity", .9);
+        div.html(masterData.name)
+        .style("left", (d3.event.pageX) + "px")   
+        .style("top", (d3.event.pageY - 28) + "px");  
+      })
+
 
 }
 var colors = ['#214586','green']
@@ -186,7 +218,7 @@ campaignSet.forEach(function(obj,index){
 
     obj.dates.forEach(function(dates,i){
       
-      rectCreate('rect-' + (i+ "" + index) ,dates,yPos,color);
+      rectCreate('rect-' + (i+ "" + index) ,dates,yPos,color,obj);
     })
 })
 
